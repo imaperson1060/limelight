@@ -43,7 +43,7 @@ new LimeDB(filepath: string, humanReadable: boolean, key: string | null).initial
 
 **Database interaction:**
 ```ts
-alter(table: string, changes: { }) // COMING SOON (probably 2.0)
+alter(table: string, changes: { cols?: string[], schema?: object, name?: string }) // COMING SOON (probably 2.0)
 select(table: string, filter: Function, limit?: number)
 create(table: string, cols: string[], schema: object/* See below */, autoID: boolean) // AUTO ID COMING SOON (probably 1.1)
 insert(table: string, row: object)
