@@ -138,7 +138,7 @@ var LimeDB = /** @class */ (function () {
                 fs.writeFileSync(_this.config.filename, database.raw(_this.config.humanReadable));
             }
             else {
-                fs.writeFileSync(_this.config.filename, JSON.stringify(encrypt(database.raw(_this.config.humanReadable), _this.config.key)));
+                fs.writeFileSync(_this.config.filename, JSON.stringify(encrypt(database.raw(_this.config.humanReadable), _this.config.key), null, _this.config.humanReadable ? 2 : 0));
             }
         };
         this.config = new Config(filename, humanReadable, key);
@@ -174,7 +174,7 @@ var Database = /** @class */ (function () {
     return Database;
 }());
 var Table = /** @class */ (function () {
-    function Table(name, cols, schema, rows) {
+    function Table(name, cols, schema, rows, autoId) {
         var _this = this;
         this.alterTable = function (changes, database) {
             if (changes.cols) {
@@ -220,6 +220,8 @@ var Table = /** @class */ (function () {
                     throw new Error("Table \"".concat(changes.name, "\" already exists."));
                 _this.name = changes.name;
             }
+            if (changes.autoId)
+                _this.autoId = changes.autoId;
         };
         this.createRow = function (row) {
             if (!new ajv_1["default"]().compile(_this.schema)(row))
@@ -233,6 +235,8 @@ var Table = /** @class */ (function () {
         if (rows)
             this.rows = rows;
         this.schema = schema;
+        if (autoId)
+            this.autoId = autoId;
     }
     return Table;
 }());

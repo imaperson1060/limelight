@@ -48,7 +48,7 @@ class LimeDB {
         this.config.key = null;
     }
 
-    public alter = (table: string, changes: { cols: string[], schema: object, name?: string }) => {
+    public alter = (table: string, changes: { cols: string[], schema: object, name: string, autoId: boolean }) => {
         const database = this.read();
 
         const selectedTable = database.tables.find(x => x.name == table);
@@ -165,7 +165,7 @@ class LimeDB {
         if (!this.config.key || encryptOverride) {
             fs.writeFileSync(this.config.filename, database.raw(this.config.humanReadable));
         } else {
-            fs.writeFileSync(this.config.filename, JSON.stringify(encrypt(database.raw(this.config.humanReadable), this.config.key)));
+            fs.writeFileSync(this.config.filename, JSON.stringify(encrypt(database.raw(this.config.humanReadable), this.config.key), null, this.config.humanReadable ? 2 : 0));
         }
     }
 }
@@ -211,15 +211,17 @@ class Table {
     cols: string[]
     rows: object[]
     schema: ajv.SchemaObject
+    autoId: boolean
 
-    constructor(name: string, cols: string[], schema: ajv.SchemaObject, rows?: object[]) {
+    constructor(name: string, cols: string[], schema: ajv.SchemaObject, rows?: object[], autoId?: boolean) {
         this.name = name;
         this.cols = cols;
         if (rows) this.rows = rows;
         this.schema = schema;
+        if (autoId) this.autoId = autoId;
     }
 
-    alterTable = (changes: { cols: string[], schema: object, name?: string }, database: Database) => {
+    alterTable = (changes: { cols: string[], schema: object, name: string, autoId: boolean }, database: Database) => {
         if (changes.cols) {
             if (!changes.schema) {
                 if (changes.cols.length != Object.keys(this.schema).length) throw new Error("Schema does not match columns.");
@@ -251,10 +253,11 @@ class Table {
             this.schema.properties = changes.schema;
         }
         if (changes.name) {
-            if (database.tables.find(x => x.name == changes.name)) throw new Error(`Table "${changes.name}" already exists.`)
+            if (database.tables.find(x => x.name == changes.name)) throw new Error(`Table "${changes.name}" already exists.`);
 
             this.name = changes.name;
         }
+        if (changes.autoId) this.autoId = changes.autoId;
     }
 
     createRow = (row: object) => {
