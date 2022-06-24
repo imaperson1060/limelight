@@ -1,6 +1,6 @@
 const { LimeDB } = require("..");
 
-const database = new LimeDB("db", true).initialize();
+const database = new LimeDB("db", true, "secret_encryption_key").initialize();
 
 try { // Create the table if it does not exist
     database.create("fruits", [ "name", "yumyum" ], {
@@ -31,10 +31,18 @@ console.log("All fruits:", database.select("fruits", (x => true))); // Show all 
 
 console.log("First 2 fruits:", database.select("fruits", (x => true), 2)); // Show only the first 2 elements (apple and orange)
 
-database.update("fruits", (x => x.name == "Apple"), { name: "Apple Inc.", yumyum: false })
+database.update("fruits", (x => x.name == "Apple"), { name: "Apple Inc.", yumyum: false });
 
-console.log("Not yum yum fruits:", database.select("fruits", (x => !x.yumyum))); // Shows only elements that are not yumyum
+database.alter("fruits", {
+    "name": "furits"
+});
 
-database.delete("fruits", (x => true)); // Delete all fruits
+console.log("Not yum yum fruits:", database.select("furits", (x => !x.yumyum))); // Shows only elements that are not yumyum
 
-console.log("Haha fruits go poof:", database.select("fruits", (x => true)));
+database.delete("furits", (x => true)); // Delete all fruits
+
+console.log("Haha fruits go poof:", database.select("furits", (x => true)));
+
+database.alter("furits", {
+    "name": "fruits",
+});
