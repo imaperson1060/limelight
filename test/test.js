@@ -1,4 +1,4 @@
-const { LimeDB } = require("limelightdb");
+const { LimeDB } = require("..");
 
 const database = new LimeDB("db", true).initialize();
 
