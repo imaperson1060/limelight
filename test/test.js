@@ -1,6 +1,6 @@
-const { LimeDB } = require("..");
+const { LimelightDB } = require("..");
 
-const database = new LimeDB("db", true, "secret_encryption_key").initialize();
+const database = new LimelightDB("db.limelight", true/* , "secret_encryption_key" */).initialize();
 
 try { // Create the table if it does not exist
     database.create("fruits", [ "name", "yumyum" ], {
@@ -10,7 +10,7 @@ try { // Create the table if it does not exist
         "yumyum": {
             "type": "boolean"
         }
-    });    
+    }, true);    
 } catch (e) { /* Table already exists */ }
 
 database.insert("fruits", [{ // Insert 4 fruits into the table
@@ -38,6 +38,35 @@ database.alter("fruits", {
 });
 
 console.log("Not yum yum fruits:", database.select("furits", (x => !x.yumyum))); // Shows only elements that are not yumyum
+
+database.alter("furits", { // Add color property
+    "schema": {
+        "name": {
+            "type": "string"
+        },
+        "yumyum": {
+            "type": "boolean"
+        },
+        "color": {
+            "type": "string"
+        }
+    }
+});
+
+console.log("All fruits (new color property demo):", database.select("furits", (x => true))); // Show all elements in the table
+
+database.alter("furits", { // Remove color property
+    "schema": {
+        "name": {
+            "type": "string"
+        },
+        "yumyum": {
+            "type": "boolean"
+        }
+    }
+});
+
+console.log("All fruits (removed color property demo):", database.select("furits", (x => true))); // Show all elements in the table
 
 database.delete("furits", (x => true)); // Delete all fruits
 

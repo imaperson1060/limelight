@@ -43,9 +43,9 @@ new LimeDB(filepath: string, humanReadable: boolean, key: string | null).initial
 
 **Database interaction:**
 ```ts
-alter(table: string, changes: { cols: string[], schema: object, name: string }) // COMING SOON (probably 2.0)
+alter(table: string, changes: { schema: object, name: string, autoId: boolean })
 select(table: string, filter: Function, limit?: number)
-create(table: string, cols: string[], schema: object/* See below */, autoID: boolean) // AUTO ID COMING SOON (probably 1.1)
+create(table: string, cols: string[], schema: object, autoId: boolean)
 insert(table: string, row: object)
 update(table: string, filter: Function, row: object)
 delete(table: string, filter: Function)
@@ -56,6 +56,8 @@ delete(table: string, filter: Function)
 **Schema examples**
 <br>
 This uses [AJV](https://ajv.js.org), so more details can be found there. User made schemas are only the `properties` property in the AJV schema object.
+<br>
+(Warning: Only the `type` property is guaranteed to work; everything else is "use at your own risk")
 ```json
 {
   "example": {
@@ -80,3 +82,26 @@ This uses [AJV](https://ajv.js.org), so more details can be found there. User ma
 (x => x.example2 == "test")   // Doesn't return row
 (x => false)                  // Doesn't return row
 ```
+
+<br>
+
+**v2.0.0 Changelog**
+* Fix MAJOR bug that prevented any file other than `db.json` from being read
+* Rename class to `LimelightDB` from `LimeDB`
+* Replace default JSON file with a new .limelight file (requires manual renaming)
+* Add `encrypted` property to the database class
+* Automatically assign an ID when `autoId` is `true`
+* Remove option to replace all columns in table with `alter(...)`
+* Replace rows that don't match updated schema with `0` or `null` (when using `alter(...)`)
+* Update tests
+
+**v1.1.0 Changelog**
+* Make JSON human readable when encrypted
+* Add `autoId` to `Table` class
+* Update tests
+
+**v1.0.0 Changelog**
+* `LimeDB` class
+* Encryption/Decryption
+* `alter(...)`, `select(...)`, `create(...)`, `insert(...)`, `update(...)`, `delete(...)`
+* Add tests file

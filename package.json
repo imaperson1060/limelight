@@ -1,8 +1,12 @@
 {
   "name": "limelightdb",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "A lightweight local database",
   "main": "index.js",
+  "scripts": {
+    "prepare": "npm run build-ts",
+    "build-ts": "tsc index.ts"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/imaperson1060/limelight.git"
