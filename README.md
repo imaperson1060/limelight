@@ -85,6 +85,9 @@ This uses [AJV](https://ajv.js.org), so more details can be found there. User ma
 
 <br>
 
+**v2.0.2 Changelog**
+* Revert transpilation (because people without TypeScript installed would not be able to do it)
+
 **v2.0.1 Changelog**
 * Fix "Initialization" section in README
 

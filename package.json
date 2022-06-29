@@ -1,11 +1,11 @@
 {
   "name": "limelightdb",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A lightweight local database",
   "main": "index.js",
   "scripts": {
-    "prepare": "npm run build-ts",
-    "build-ts": "tsc index.ts"
+    "prepack": "tsc index.ts",
+    "postpack": "rm index.js"
   },
   "repository": {
     "type": "git",
