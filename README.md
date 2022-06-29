@@ -16,7 +16,7 @@ _noun_
 
 **Database initialization:**
 ```ts
-new LimeDB(filepath: string, humanReadable: boolean, key: string | null).initialize();
+new LimelightDB(filepath: string, humanReadable: boolean, key: string | null).initialize();
 ```
 
 <br>
@@ -84,6 +84,9 @@ This uses [AJV](https://ajv.js.org), so more details can be found there. User ma
 ```
 
 <br>
+
+**v2.0.1 Changelog**
+* Fix "Initialization" section in README
 
 **v2.0.0 Changelog**
 * Fix MAJOR bug that prevented any file other than `db.json` from being read
