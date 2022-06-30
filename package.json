@@ -1,6 +1,6 @@
 {
   "name": "limelightdb",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "A lightweight local database",
   "main": "index.js",
   "scripts": {

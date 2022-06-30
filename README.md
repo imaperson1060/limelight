@@ -89,6 +89,9 @@ This uses [AJV](https://ajv.js.org), so more details can be found there. User ma
 
 <br>
 
+**v2.0.6 Changelog**
+* Fix bug in `update(...)` schema validation if using `autoId`
+
 **v2.0.5 Changelog**
 * Allow `decrypt(...)` method to be called before initialization
 

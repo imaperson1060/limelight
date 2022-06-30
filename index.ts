@@ -144,10 +144,19 @@ class LimelightDB {
 
         for (var i = 0; i < rows.length; i++) {
             const newRow = Object.assign({}, rows[i], row);
+            
+            let tempId;
+
+            if (newRow["id"]) {
+                tempId = newRow["id"];
+                delete newRow["id"];
+            }
 
             if (!new Ajv().compile(selectedTable.schema)(newRow)) throw new Error(`Error while updating row in "${table}"
             ${JSON.stringify(newRow)} does not match
             ${JSON.stringify(selectedTable.schema.properties)}.`);
+
+            if (tempId) newRow["id"] = tempId;
 
             Object.assign(rows[i], row);
         }
