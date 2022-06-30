@@ -141,7 +141,7 @@ class LimelightDB {
         for (var i = 0; i < rows.length; i++) {
             const newRow = Object.assign({}, rows[i], row);
             
-            if (!new Ajv().compile(selectedTable.schema)(newRow)) throw new Error(`Error while inserting new row into "${table}"
+            if (!new Ajv().compile(selectedTable.schema)(newRow)) throw new Error(`Error while updating row in "${table}"
             ${JSON.stringify(newRow)} does not match
             ${JSON.stringify(selectedTable.schema.properties)}.`);
 
