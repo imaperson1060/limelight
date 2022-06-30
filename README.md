@@ -27,7 +27,29 @@ new LimelightDB(filepath: string, humanReadable: boolean, key: string | null).de
 
 **Database structure:**
 ```json
-
+{
+  "filename": "db.limelight",
+  "humanReadable": true,
+  "key": "secret_encryption_key",
+  "encrypted": true,
+  "tables": [
+    {
+      "name": "table",
+      "cols": [
+        "example",
+        "example2"
+      ],
+      "rows": [
+        {
+          "example": "test",
+          "example2": null
+        }
+      ],
+      "schema": { /* ... */ },
+      "autoId": true
+    }
+  ]
+}
 ```
 
 <br>
