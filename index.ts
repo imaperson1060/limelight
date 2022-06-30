@@ -53,17 +53,21 @@ class LimelightDB {
         return this;
     }
 
-    decrypt = () => {
+    decrypt = (key?: string) => {
         const database = JSON.parse(fs.readFileSync(this.filename, "utf-8"));
 
-        if (!database.iv && !database.encryptedData || !this.key) throw new Error("Database is not encrypted.");
+        if (!database.iv && !database.encryptedData) throw new Error("Database is not encrypted.");
 
         console.log("Decrypting database with key...");
-        this.write(new Database(JSON.parse(decrypt(database, this.key))), true);
+        if (this.key) this.write(new Database(JSON.parse(decrypt(database, this.key))), true);
+        else if (key) this.write(new Database(JSON.parse(decrypt(database, key))), true);
+        else throw new Error("No key is provided.");
         console.log("Database is now decrypted. Do not provide a key when initializing the database or it will be re-encrypted.");
 
         this.key = null;
         this.encrypted = false;
+
+        return this;
     }
 
     alter = (table: string, changes: { cols: string[], schema: object, name: string, autoId: boolean }) => {
@@ -140,7 +144,7 @@ class LimelightDB {
 
         for (var i = 0; i < rows.length; i++) {
             const newRow = Object.assign({}, rows[i], row);
-            
+
             if (!new Ajv().compile(selectedTable.schema)(newRow)) throw new Error(`Error while updating row in "${table}"
             ${JSON.stringify(newRow)} does not match
             ${JSON.stringify(selectedTable.schema.properties)}.`);

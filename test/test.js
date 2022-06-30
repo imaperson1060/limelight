@@ -1,6 +1,6 @@
 const { LimelightDB } = require("..");
 
-const database = new LimelightDB("db.limelight", true/* , "secret_encryption_key" */).initialize();
+const database = new LimelightDB("db.limelight", true, "secret_encryption_key").initialize();
 
 try { // Create the table if it does not exist
     database.create("fruits", [ "name", "yumyum" ], {

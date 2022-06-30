@@ -18,6 +18,10 @@ _noun_
 ```ts
 new LimelightDB(filepath: string, humanReadable: boolean, key: string | null).initialize();
 ```
+If you want to decrypt your database before initialization, add the `decrypt(...)` method before the `initialize()` method.
+```ts
+new LimelightDB(filepath: string, humanReadable: boolean, key: string | null).decrypt(key: string).initialize();
+```
 
 <br>
 
@@ -84,6 +88,9 @@ This uses [AJV](https://ajv.js.org), so more details can be found there. User ma
 ```
 
 <br>
+
+**v2.0.5 Changelog**
+* Allow `decrypt(...)` method to be called before initialization
 
 **v2.0.4 Changelog**
 * Revert accidental publish
