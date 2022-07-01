@@ -3,18 +3,23 @@ import * as crypto from "crypto";
 import * as fs from "fs";
 import * as path from "path";
 
-class LimelightDB {
+import { startServer } from "./server";
+
+export class LimelightDB {
     filename: string;
     humanReadable: boolean;
     key: string | null;
+    port: number;
     encrypted: boolean;
 
-    constructor(filename: string, humanReadable?: boolean, key: string | null = null) {
+    constructor(filename: string, humanReadable?: boolean, key: string | null = null, port?: number) {
         this.filename = filename;
         if (!path.extname(filename)) this.filename += ".limelight"
 
         this.humanReadable = humanReadable ? true : false;
         this.key = key;
+
+        if (port) this.port = port;
     }
 
     initialize = () => {
@@ -47,7 +52,11 @@ class LimelightDB {
                 }
             }
 
-            this.encrypted = (database.iv && database.encryptedData) || (!database.iv && !database.encryptedData && this.key);
+            if ((database.iv && database.encryptedData) || (!database.iv && !database.encryptedData && this.key)) this.encrypted = true;
+        }
+
+        if (this.port && this.key) {
+            startServer(this);
         }
 
         return this;
@@ -70,7 +79,7 @@ class LimelightDB {
         return this;
     }
 
-    alter = (table: string, changes: { cols: string[], schema: object, name: string, autoId: boolean }) => {
+    alter = (table: string, changes: { schema: object, name: string, autoId: boolean }) => {
         const database = this.read();
 
         const selectedTable = database.tables.find(x => x.name == table);
@@ -82,7 +91,7 @@ class LimelightDB {
         this.write(database);
     }
 
-    select = (table: string, filter: Function, limit?: number) => {
+    select = (table: string, filter: Function, limit?: number): Object[] => {
         const database = this.read();
 
         const selectedTable = database.tables.find(x => x.name == table);
@@ -119,14 +128,14 @@ class LimelightDB {
         this.write(database);
     }
 
-    insert = (table: string, row: object[]) => {
+    insert = (table: string, rows: object[]) => {
         const database = this.read();
 
         const selectedTable = database.tables.find(x => x.name == table);
         
         if (!selectedTable) throw new Error(`Table "${table}" does not exist. Did you mean to create it (".create(...)" method)?`)
 
-        row.forEach(x => selectedTable.createRow(x));
+        rows.forEach(x => selectedTable.createRow(x));
 
         this.write(database);
     }
@@ -186,7 +195,7 @@ class LimelightDB {
         this.write(database);
     }
 
-    read = () => {
+    read = (): Database => {
         if (!this.key) {
             return new Database(JSON.parse(fs.readFileSync(this.filename, "utf-8")));
         } else {
@@ -194,7 +203,7 @@ class LimelightDB {
         }
     }
 
-    write = (database: Database, encryptOverride?: boolean) => {
+    private write = (database: Database, encryptOverride?: boolean) => {
         if (!this.key || encryptOverride) {
             fs.writeFileSync(this.filename, database.raw(this.humanReadable));
         } else {
@@ -203,7 +212,7 @@ class LimelightDB {
     }
 }
 
-class Database {
+export class Database {
     tables: Table[];
 
     constructor(database?: Database) {
@@ -221,7 +230,7 @@ class Database {
     }
 }
 
-class Table {
+export class Table {
     name: string;
     cols: string[];
     rows: object[];
@@ -323,5 +332,3 @@ function decrypt(data: { iv: string, encryptedData: string }, key: string) {
     decrypted = Buffer.concat([decrypted, decipher.final()]);
     return decrypted.toString();
 }
-
-module.exports = { LimelightDB }

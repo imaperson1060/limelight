@@ -10,18 +10,30 @@ _noun_
 <br>
 
 [![NPM Version](https://img.shields.io/npm/v/limelightdb.svg)](https://github.com/imaperson1060/limelight)
-[![NPM Weekly Downloads](https://img.shields.io/npm/dw/limelightdb)](https://github.com/imaperson1060/limelight)
+[![NPM Weekly Downloads](https://img.shields.io/npm/dw/limelightdb)](https://npm-stat.com/charts.html?package=limelightdb)
+
+<br>
+
+**Import Limelight**
+```ts
+const { LimelightDB } = require("limelightdb"); // CommonJS
+const Lime = require("limelightdb"); // CommonJS, for accessing all classes (Lime.LimelightDB, Lime.Database, Lime.Table)
+
+import { LimelightDB } from "limelightdb"; // ES6
+import * as Lime from "limelightdb"; // ES6, for accessing all classes (Lime.LimelightDB, Lime.Database, Lime.Table)
+```
 
 <br>
 
 **Database initialization:**
 ```ts
-new LimelightDB(filepath: string, humanReadable: boolean, key: string | null).initialize();
+new LimelightDB(filepath: string, humanReadable: boolean, key: string | null, port?: number).initialize();
 ```
 If you want to decrypt your database before initialization, add the `decrypt(...)` method before the `initialize()` method.
 ```ts
-new LimelightDB(filepath: string, humanReadable: boolean, key: string | null).decrypt(key: string).initialize();
+new LimelightDB(filepath: string, humanReadable: boolean, key: string | null, port?: number).decrypt(key: string).initialize();
 ```
+Providing a port will start an HTTP server on that port that can be used to access/modify your database externally, provided the port isn't already taken. Maybe someone will make a _Sublime_ Admin Panel...
 
 <br>
 
@@ -59,9 +71,45 @@ new LimelightDB(filepath: string, humanReadable: boolean, key: string | null).de
 alter(table: string, changes: { schema: object, name: string, autoId: boolean })
 select(table: string, filter: Function, limit?: number)
 create(table: string, cols: string[], schema: object, autoId: boolean)
-insert(table: string, row: object)
+insert(table: string, rows: object[])
 update(table: string, filter: Function, row: object)
 delete(table: string, filter: Function)
+
+read()
+```
+Interactions can also be done externally if a port is provided for the HTTP server to run on.
+<br>
+<br>
+NOTE: For security, the server will only start if a key is required. Because the filter is just a JavaScript function, it could lead to remote code execution.
+<br>
+<br>
+**General Syntax**: `/query?type={{INTERACTION_TYPE}}&table={{TABLE_NAME}}&key={{ENCRYPTION_KEY}}`
+<br>
+For additional parameters, use the same key names as are listed above.
+<br>
+All parameters must be [URI Encoded](https://www.urlencoder.org/). (`(x => true)` --> `%28x%20%3D%3E%20true%29`)
+<br>
+**Examples:**
+```
+GET /query?type=select&table=table&filter=%28x%20%3D%3E%20true%29&limit=5&key=secret_encryption_key
+GET /query?type=alter&table=table&changes=%7B%20%22schema%22%3A%20%7B%20%22example%22%3A%20%7B%20%22type%22%3A%20%22number%22%20%7D%20%7D%20%7D&key=secret_encryption_key
+```
+Responses will have a `success` boolean, and depending on that, either `code` (error code) or `response`.
+```json
+{
+  "success": false,
+  "code": "NO_INTERACTION_TYPE"
+}
+
+{
+  "success": true,
+  "response": [
+    {
+      "example": "test",
+      "example2": null
+    }
+  ]
+}
 ```
 
 <br>
@@ -97,6 +145,9 @@ This uses [AJV](https://ajv.js.org), so more details can be found there. User ma
 ```
 
 <br>
+
+**v3.0.0 Changelog**
+* Add HTTP server for external editing (very _Sublime_)
 
 **v2.0.6 Changelog**
 * Fix bug in `update(...)` schema validation if using `autoId`
