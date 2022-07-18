@@ -9,6 +9,10 @@ _noun_
 
 <br>
 
+<img src="assets/limelight.png" width="256" height="256" style="border-radius:50%;">
+
+<br>
+
 [![NPM Version](https://img.shields.io/npm/v/limelightdb.svg)](https://github.com/imaperson1060/limelight)
 [![NPM Weekly Downloads](https://img.shields.io/npm/dw/limelightdb)](https://npm-stat.com/charts.html?package=limelightdb)
 
