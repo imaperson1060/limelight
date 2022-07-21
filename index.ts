@@ -98,6 +98,8 @@ export class LimelightDB {
 
         if (!selectedTable) throw new Error(`Table "${table}" does not exist. Did you mean to create it (".create(...)" method)?`)
         
+        if (!selectedTable.rows) return [];
+
         if (!limit) return selectedTable.rows.filter(x => filter(x));
         else return selectedTable.rows.filter(x => filter(x)).slice(0, limit);
     }
@@ -156,7 +158,7 @@ export class LimelightDB {
             
             let tempId;
 
-            if (newRow["id"]) {
+            if (newRow["id"] && selectedTable.autoId) {
                 tempId = newRow["id"];
                 delete newRow["id"];
             }
@@ -165,7 +167,7 @@ export class LimelightDB {
             ${JSON.stringify(newRow)} does not match
             ${JSON.stringify(selectedTable.schema.properties)}.`);
 
-            if (tempId) newRow["id"] = tempId;
+            if (tempId && selectedTable.autoId) newRow["id"] = tempId;
 
             Object.assign(rows[i], row);
         }
