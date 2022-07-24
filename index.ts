@@ -63,7 +63,7 @@ export class LimelightDB {
             this.server = startServer(this);
         }
 
-        this.version = "3.1.4";
+        this.version = "3.1.5";
 
         return this;
     }
@@ -172,6 +172,9 @@ export class LimelightDB {
                 tempId = newRow["id"];
                 delete newRow["id"];
             }
+
+            Object.keys(newRow).forEach(x => { if (selectedTable.schema.properties[x].type == "number") newRow[x] = parseInt(newRow[x]) });
+            Object.keys(row).forEach(x => { if (selectedTable.schema.properties[x].type == "number") row[x] = parseInt(row[x]) });
 
             if (!new Ajv().compile(selectedTable.schema)(newRow)) throw new Error(`Error while updating row in "${table}"
             ${JSON.stringify(newRow)} does not match

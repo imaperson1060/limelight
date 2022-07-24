@@ -157,6 +157,9 @@ This uses [AJV](https://ajv.js.org), so more details can be found there. User ma
 
 <br>
 
+**v3.1.5 Changelog**
+* Apply the bugfix to `update(...)`
+
 **v3.1.4 Changelog**
 * Bugfix the bugfix of the bugfix
 
