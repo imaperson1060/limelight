@@ -157,6 +157,9 @@ This uses [AJV](https://ajv.js.org), so more details can be found there. User ma
 
 <br>
 
+**v3.1.3 Changelog**
+* Bugfix the bugfix
+
 **v3.1.2 Changelog**
 * Convert strings to numbers to appease AJV
 
