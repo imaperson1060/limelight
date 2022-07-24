@@ -157,6 +157,9 @@ This uses [AJV](https://ajv.js.org), so more details can be found there. User ma
 
 <br>
 
+**v 3.1.1 Changelog**
+* Always redownload Sublime
+
 **v3.1.0 Changelog**
 * Add Sublime admin panel
 * Fix bugs with schema/columns when altering table

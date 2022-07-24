@@ -18,7 +18,6 @@ export function startServer(db: Lime.LimelightDB) : http.Server {
             try {
                 let sublime = JSON.parse(body);
 
-                if (sublime.version > db.version) {
                     sublime.files.forEach(x => {
                         fs.mkdirSync(`${path.parse(require.resolve(".")).dir}/sublime/${path.parse(x).dir}`, { recursive: true });
 
@@ -27,7 +26,6 @@ export function startServer(db: Lime.LimelightDB) : http.Server {
                             response.pipe(file);
                         });
                     });
-                }
             } catch (e) { }
         });
     });
