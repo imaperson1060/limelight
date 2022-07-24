@@ -37,7 +37,7 @@ If you want to decrypt your database before initialization, add the `decrypt(...
 ```ts
 new LimelightDB(filepath: string, humanReadable: boolean, key: string | null, port?: number).decrypt(key: string).initialize();
 ```
-Providing a port will start an HTTP server on that port that can be used to access/modify your database externally, provided the port isn't already taken. Maybe someone will make a _Sublime_ Admin Panel...
+Providing a port will start an HTTP server on that port that can be used to access/modify your database externally, provided the port isn't already taken. You can interact with this server using the [Sublime Admin Panel](https://sublime.imaperson.dev).
 
 <br>
 
@@ -61,7 +61,14 @@ Providing a port will start an HTTP server on that port that can be used to acce
           "example2": null
         }
       ],
-      "schema": { /* ... */ },
+      "schema": {
+        "example": {
+          "type": "string"
+        },
+        "example2": {
+          "type": "null"
+        }
+      },
       "autoId": true
     }
   ]
@@ -149,6 +156,10 @@ This uses [AJV](https://ajv.js.org), so more details can be found there. User ma
 ```
 
 <br>
+
+**v3.1.0 Changelog**
+* Add Sublime admin panel
+* Fix bugs with schema/columns when altering table
 
 **v3.0.0 Changelog**
 * Add HTTP server for external editing (very _Sublime_)

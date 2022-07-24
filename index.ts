@@ -1,6 +1,7 @@
 import Ajv, * as ajv from "ajv";
 import * as crypto from "crypto";
 import * as fs from "fs";
+import * as http from "http";
 import * as path from "path";
 
 import { startServer } from "./server";
@@ -11,6 +12,9 @@ export class LimelightDB {
     key: string | null;
     port: number;
     encrypted: boolean;
+    server: http.Server;
+
+    version: string;
 
     constructor(filename: string, humanReadable?: boolean, key: string | null = null, port?: number) {
         this.filename = filename;
@@ -56,10 +60,16 @@ export class LimelightDB {
         }
 
         if (this.port && this.key) {
-            startServer(this);
+            this.server = startServer(this);
         }
 
+        this.version = "3.1.0";
+
         return this;
+    }
+
+    stopServer = () => {
+        if (this.server) this.server.close();
     }
 
     decrypt = (key?: string) => {
@@ -251,7 +261,7 @@ export class Table {
         if (changes.schema) {
             Object.keys(changes.schema).forEach(x => {
                 if (!this.schema.properties[x] || this.schema.properties[x].type != changes.schema[x].type) {
-                    this.rows.forEach(y => {
+                    this.rows?.forEach(y => {
                         switch(changes.schema[x].type) {
                             case "number":
                             case "integer":
@@ -278,9 +288,10 @@ export class Table {
             });
 
             Object.keys(this.schema.properties).forEach(x => {
-                if (!changes.schema[x] && x != "id") this.rows.forEach(y => (delete y[x]));
+                if (!changes.schema[x] && x != "id") this.rows?.forEach(y => (delete y[x]));
             });
 
+            this.cols = Object.keys(changes.schema);
             this.schema.properties = changes.schema;
             this.schema.required = Object.keys(changes.schema);
         }
@@ -291,11 +302,11 @@ export class Table {
         }
         if (changes.autoId) {
             if (changes.autoId) {
-                this.rows.forEach(x => {
+                this.rows?.forEach(x => {
                     x["id"] = this.rows.length + 1;
                 });
             } else {
-                this.rows.forEach(x => (delete x["id"]));
+                this.rows?.forEach(x => (delete x["id"]));
             }
 
             this.autoId = changes.autoId;
