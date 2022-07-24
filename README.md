@@ -157,7 +157,10 @@ This uses [AJV](https://ajv.js.org), so more details can be found there. User ma
 
 <br>
 
-**v 3.1.1 Changelog**
+**v3.1.2 Changelog**
+* Convert strings to numbers to appease AJV
+
+**v3.1.1 Changelog**
 * Always redownload Sublime
 
 **v3.1.0 Changelog**

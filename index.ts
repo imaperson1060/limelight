@@ -63,7 +63,7 @@ export class LimelightDB {
             this.server = startServer(this);
         }
 
-        this.version = "3.1.0";
+        this.version = "3.1.2";
 
         return this;
     }
@@ -314,6 +314,8 @@ export class Table {
     }
 
     createRow = (row: object) => {
+        Object.keys(row).forEach(x => { if (this.schema[x].type == "number") row[x] = parseInt(row[x]) });
+
         if (!new Ajv().compile(this.schema)(row)) throw new Error(`Error while inserting new row into "${this.name}"
             ${JSON.stringify(row)} does not match
             ${JSON.stringify(this.schema.properties)}.`);
